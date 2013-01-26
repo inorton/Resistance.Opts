@@ -6,6 +6,7 @@ using Mono.Options;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.IO;
+using System.Text;
 
 namespace Resistance.Opts
 {
@@ -47,6 +48,9 @@ namespace Resistance.Opts
 	{
 		public OptionSet Opts { get; private set; }
 
+		public TextWriter StdError { get; set; }
+		public TextWriter StdOutput { get; set; }
+
 		public static string HypenateCamelCase (string ccase)
 		{ 
 			var sb = new System.Text.StringBuilder ();
@@ -74,14 +78,31 @@ namespace Resistance.Opts
 			Opts = Build(grp, new OptionSet());
 		}
 
-		static OptionSet Build (object prog, OptionSet oset)
+		public string Help {
+			get {
+				var tw = new StringWriter();
+				Opts.WriteOptionDescriptions( tw );
+				return tw.ToString();
+			}
+		}
+
+		OptionSet Build (object prog, OptionSet oset)
 		{
 			if (prog == null)
 				throw new ArgumentNullException ("prog");
 
-			if ( oset == null ) oset = new OptionSet();
+			if (oset == null)
+				oset = new OptionSet ();
 
 			var ptype = prog.GetType ();
+
+			// build help provider
+			var hp = ptype.GetCustomAttributes (typeof(CommandLineHelpProviderAttribute), true);
+			if ( hp != null && (hp.Length != 0)) {
+				oset.Add( "h|help", "Display this message", (x) => {
+					throw new HelpRequestedArgument() { 
+						OptionHost = this };} );
+			}
 
 			var opts = new Dictionary<PropertyInfo, CommandLineArgumentAttribute> ();
 
@@ -131,8 +152,26 @@ namespace Resistance.Opts
 			return oset;
 		}
 
-		public List<string> Parse( params string[] argv ) {
-			return Opts.Parse( argv );
+		public List<string> Parse (params string[] argv)
+		{
+			try {
+				return Opts.Parse (argv);
+			} catch (HelpRequestedArgument e) {
+				var err = StdError != null ? StdError : Console.Error;
+				err.WriteLine( Help );
+				e.Handled = true;
+				throw;
+			}
+		}
+
+		public bool TryParse( List<string> extraOut, params string[] argv ){
+			if ( extraOut == null ) throw new ArgumentNullException( "extraOut" );
+			try {
+				extraOut.AddRange( Parse ( argv ) );
+				return true;
+			} catch ( BadCommandLineArguments ) {
+			}
+			return false;
 		}
 	}
 }

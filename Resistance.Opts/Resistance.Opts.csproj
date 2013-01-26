@@ -39,6 +39,8 @@
     <Compile Include="CommandLineArgumentAttribute.cs" />
     <Compile Include="OptHost.cs" />
     <Compile Include="CommandLineHelpProviderAttribute.cs" />
+    <Compile Include="HelpRequestedArgument.cs" />
+    <Compile Include="BadCommandLineArguments.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
