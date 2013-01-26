@@ -10,12 +10,27 @@ using System.Text;
 
 namespace Resistance.Opts
 {
-	public class OptHost
+	public class OptHost<T> 
+		where T : class
 	{
+		/// <summary>
+		/// Gets or sets the configuration object.
+		/// </summary>
+		public T OptionSettings { get; set; }
+
+		/// <summary>
+		/// Set the optional heading for this option group.
+		/// </summary>
+		public string Heading { get; set; }
+
 		/// <summary>
 		/// The options built by this OptHost.
 		/// </summary>
-		public OptionSet Opts { get; private set; }
+		public OptionSet Opts { 
+			get {
+				return Build ( OptionSettings );
+			}
+		}
 
 		/// <summary>
 		/// Option related errors and help text are written here.
@@ -28,6 +43,12 @@ namespace Resistance.Opts
 		public bool TerminateOnError { get; set; }
 
 		public Action<int> CustomTerminateProcessAction { get; set; }
+
+
+		public OptHost()
+		{
+			Heading = "Options";
+		}
 
 		public static string HypenateCamelCase (string ccase)
 		{ 
@@ -44,18 +65,6 @@ namespace Resistance.Opts
 			return sb.ToString().ToLower();
 		}
 
-		public void Build (object grp, string heading)
-		{
-			var oset = new OptionSet();
-			oset.Add( heading );
-			Opts = Build ( grp, oset );
-		}
-
-		public void Build (object grp)
-		{
-			Opts = Build(grp, new OptionSet());
-		}
-
 		public string Help {
 			get {
 				var tw = new StringWriter();
@@ -64,13 +73,16 @@ namespace Resistance.Opts
 			}
 		}
 
-		OptionSet Build (object prog, OptionSet oset)
+		OptionSet Build (object prog)
 		{
 			if (prog == null)
 				throw new ArgumentNullException ("prog");
 
-			if (oset == null)
-				oset = new OptionSet ();
+			var oset = new OptionSet ();
+
+			if (!string.IsNullOrEmpty (Heading)) {
+				oset.Add(Heading);
+			}
 
 			var ptype = prog.GetType ();
 
@@ -78,8 +90,8 @@ namespace Resistance.Opts
 			var hp = ptype.GetCustomAttributes (typeof(CommandLineHelpProviderAttribute), true);
 			if ( hp != null && (hp.Length != 0)) {
 				oset.Add( "h|help", "Display this message", (x) => {
-					throw new HelpRequestedArgument() { 
-						OptionHost = this };} );
+					throw new HelpRequestedArgument();
+				});
 			}
 
 			var opts = new Dictionary<PropertyInfo, CommandLineArgumentAttribute> ();

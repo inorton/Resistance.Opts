@@ -29,8 +29,7 @@ namespace Resistance.Opts.Tests
 		public void TestBuild ()
 		{
 			var o = new TestObject();
-			var host = new OptHost();
-			host.Build( o, "Options" );
+			var host = new OptHost<TestObject>(){ OptionSettings = o };
 			host.Opts.WriteOptionDescriptions( Console.Out );
 
 			host.Opts.Parse( new string[] { 
@@ -49,8 +48,7 @@ namespace Resistance.Opts.Tests
 		[Test]
 		public void TestTryHelp () {
 			var o = new TestObject();
-			var host = new OptHost();
-			host.Build( o );
+			var host = new OptHost<TestObject>() { OptionSettings = o };
 			var extra = new List<string>();
 			Assert.IsFalse( host.TryParse( extra, "--help") );
 		}
@@ -59,8 +57,7 @@ namespace Resistance.Opts.Tests
 		[ExpectedException(typeof(HelpRequestedArgument))]
 		public void TestThrowHelp () {
 			var o = new TestObject();
-			var host = new OptHost();
-			host.Build( o );
+			var host = new OptHost<TestObject>() { OptionSettings = o };
 			host.Parse( "--help");
 		}
 	}

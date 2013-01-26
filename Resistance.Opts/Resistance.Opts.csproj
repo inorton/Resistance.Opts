@@ -43,6 +43,7 @@
     <Compile Include="BadCommandLineArguments.cs" />
     <Compile Include="OptionSetter.cs" />
     <Compile Include="BoolOptionSetter.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

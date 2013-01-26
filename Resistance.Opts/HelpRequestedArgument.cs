@@ -6,6 +6,5 @@ namespace Resistance.Opts
 {
 	public class HelpRequestedArgument : BadCommandLineArguments 
 	{
-		public OptHost OptionHost { get; set; }
 	}
 }
