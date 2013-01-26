@@ -28,10 +28,10 @@ namespace Resistance.Opts.Tests
 		{
 			var o = new TestObject();
 			var host = new OptHost();
-			var options = host.Build( o, "Options" );
-			options.WriteOptionDescriptions( Console.Out );
+			host.Build( o, "Options" );
+			host.Opts.WriteOptionDescriptions( Console.Out );
 
-			options.Parse( new string[] { 
+			host.Opts.Parse( new string[] { 
 				"--verbose", 
 				"--enable",
 				"--output-file=myfilename", 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Mono.Options;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace Resistance.Opts
 {
@@ -30,7 +31,7 @@ namespace Resistance.Opts
 			get {
 				return delegate(T value) { Invoke(value); };
 			}
-		}	
+		}
 	}
 
 	public class BoolOptionSetter : OptionSetter<bool> {
@@ -44,6 +45,8 @@ namespace Resistance.Opts
 
 	public class OptHost
 	{
+		public OptionSet Opts { get; private set; }
+
 		public static string HypenateCamelCase (string ccase)
 		{ 
 			var sb = new System.Text.StringBuilder ();
@@ -59,14 +62,19 @@ namespace Resistance.Opts
 			return sb.ToString().ToLower();
 		}
 
-		public OptionSet Build (object grp, string heading)
+		public void Build (object grp, string heading)
 		{
 			var oset = new OptionSet();
 			oset.Add( heading );
-			return Build ( grp, oset );
+			Opts = Build ( grp, oset );
 		}
 
-		public OptionSet Build (object prog, OptionSet oset)
+		public void Build (object grp)
+		{
+			Opts = Build(grp, new OptionSet());
+		}
+
+		static OptionSet Build (object prog, OptionSet oset)
 		{
 			if (prog == null)
 				throw new ArgumentNullException ("prog");
@@ -118,11 +126,13 @@ namespace Resistance.Opts
 					oset.Add( prototype, attr.HelpText, new OptionSetter<string>( prog, prop ).Action );
 					continue;
 				}
-				
-
 			}
 
 			return oset;
+		}
+
+		public List<string> Parse( params string[] argv ) {
+			return Opts.Parse( argv );
 		}
 	}
 }
