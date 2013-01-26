@@ -41,6 +41,8 @@
     <Compile Include="CommandLineHelpProviderAttribute.cs" />
     <Compile Include="HelpRequestedArgument.cs" />
     <Compile Include="BadCommandLineArguments.cs" />
+    <Compile Include="OptionSetter.cs" />
+    <Compile Include="BoolOptionSetter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

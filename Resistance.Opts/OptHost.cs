@@ -10,46 +10,24 @@ using System.Text;
 
 namespace Resistance.Opts
 {
-	public class OptionSetter<T> 
-	{
-		object optionOwner;
-		PropertyInfo optionPropertyInfo;
-
-		public OptionSetter (object obj, PropertyInfo prop)
-		{
-			if ( obj == null ) throw new ArgumentNullException("obj");
-			if ( prop == null ) throw new ArgumentNullException("prop");
-			optionOwner = obj;
-			optionPropertyInfo = prop;
-		}
-
-		public virtual void Invoke (object value)
-		{
-			optionPropertyInfo.SetValue( optionOwner, value, null );
-		}
-
-		public Action<T> Action {
-			get {
-				return delegate(T value) { Invoke(value); };
-			}
-		}
-	}
-
-	public class BoolOptionSetter : OptionSetter<bool> {
-		public BoolOptionSetter( object obj, PropertyInfo prop) : base ( obj, prop ) { }
-		public Action<string> BoolAction {
-			get {
-				return delegate(string v) { base.Invoke(!string.IsNullOrEmpty(v)); };
-			}
-		}
-	}
-
 	public class OptHost
 	{
+		/// <summary>
+		/// The options built by this OptHost.
+		/// </summary>
 		public OptionSet Opts { get; private set; }
 
+		/// <summary>
+		/// Option related errors and help text are written here.
+		/// </summary>
 		public TextWriter StdError { get; set; }
-		public TextWriter StdOutput { get; set; }
+
+		/// <summary>
+		/// Terminate the process if a bad option is supplied.
+		/// </summary>
+		public bool TerminateOnError { get; set; }
+
+		public Action<int> CustomTerminateProcessAction { get; set; }
 
 		public static string HypenateCamelCase (string ccase)
 		{ 
@@ -160,6 +138,15 @@ namespace Resistance.Opts
 				var err = StdError != null ? StdError : Console.Error;
 				err.WriteLine( Help );
 				e.Handled = true;
+				if ( TerminateOnError ){ 
+					if ( CustomTerminateProcessAction != null )
+					{
+						CustomTerminateProcessAction.Invoke(1);
+					} else {
+						Environment.Exit(1);
+					}
+				}
+
 				throw;
 			}
 		}
