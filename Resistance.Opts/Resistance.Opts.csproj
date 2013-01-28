@@ -44,6 +44,7 @@
     <Compile Include="OptionSetter.cs" />
     <Compile Include="BoolOptionSetter.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="CommandLineGroupHeadingAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

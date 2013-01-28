@@ -11,13 +11,7 @@ using System.Text;
 namespace Resistance.Opts
 {
 	public class Utils {
-		public static OptHost<T> Create<T>(T options)
-			where T : class
-		{
-			if (options == null)
-				throw new ArgumentNullException ("options");
-			return new OptHost<T> () { OptionSettings = options };
-		}
+
 	}
 	
 }

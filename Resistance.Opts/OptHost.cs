@@ -10,13 +10,22 @@ using System.Text;
 
 namespace Resistance.Opts
 {
-	public class OptHost<T> 
-		where T : class
+	public class OptHost<T> : OptHost
+		where T : class, new()
 	{
 		/// <summary>
 		/// Gets or sets the configuration object.
 		/// </summary>
-		public T OptionSettings { get; set; }
+		public T Object { get { return settingsObject as T; } }
+
+		public OptHost() : base () {
+			settingsObject = new T();
+		}
+	}
+
+    public class OptHost
+	{
+		protected object settingsObject;
 
 		/// <summary>
 		/// Set the optional heading for this option group.
@@ -28,7 +37,7 @@ namespace Resistance.Opts
 		/// </summary>
 		public OptionSet Opts { 
 			get {
-				return Build ( OptionSettings );
+				return Build ( settingsObject );
 			}
 		}
 
@@ -78,13 +87,21 @@ namespace Resistance.Opts
 			if (prog == null)
 				throw new ArgumentNullException ("prog");
 
+			var ptype = prog.GetType ();
+
 			var oset = new OptionSet ();
+
+			// find the group heading if any,
+			var gp = ptype.GetCustomAttributes (typeof(CommandLineGroupHeadingAttribute), true);
+			if (gp != null) {
+				if ( gp.Length > 1 ) throw new InvalidOperationException("more than one options heading given");
+			}
 
 			if (!string.IsNullOrEmpty (Heading)) {
 				oset.Add(Heading);
 			}
 
-			var ptype = prog.GetType ();
+
 
 			// build help provider
 			var hp = ptype.GetCustomAttributes (typeof(CommandLineHelpProviderAttribute), true);
@@ -142,7 +159,7 @@ namespace Resistance.Opts
 			return oset;
 		}
 
-		public List<string> Parse (params string[] argv)
+		List<string> Parse (params string[] argv)
 		{
 			try {
 				return Opts.Parse (argv);
