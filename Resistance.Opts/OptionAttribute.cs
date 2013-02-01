@@ -3,8 +3,7 @@ using System.Reflection;
 
 namespace Resistance.Opts
 {
-	[AttributeUsage( AttributeTargets.Property )]
-	public class OptionAttribute : Attribute
+	public class BaseOptionAttribute : Attribute 
 	{
 		public string Name { get; set; }
 		public int Order { get; set; }
@@ -12,9 +11,22 @@ namespace Resistance.Opts
 	}
 
 	[AttributeUsage( AttributeTargets.Property )]
-	public class ExtraAttribute : Attribute 
+	public class OptionAttribute : BaseOptionAttribute
+	{
+	
+	}
+
+	[AttributeUsage( AttributeTargets.Property )]
+	public class ExtraAttribute : BaseOptionAttribute 
 	{
 
+	}
+
+	[AttributeUsage( AttributeTargets.Property )]
+	public class ExtraListAttribute : BaseOptionAttribute 
+	{
+		public int MinimumCount { get; set; }
+		public int MaximumCount { get; set; }
 	}
 
 }

@@ -49,10 +49,6 @@ namespace Resistance.Opts
 		public Action<int> CustomTerminateProcessAction { get; set; }
 
 
-		public OptHost()
-		{
-		}
-
 		public static string HypenateCamelCase (string ccase)
 		{ 
 			var sb = new System.Text.StringBuilder ();

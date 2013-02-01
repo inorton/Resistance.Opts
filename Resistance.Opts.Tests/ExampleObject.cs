@@ -27,6 +27,12 @@ namespace Resistance.Opts.Tests
 		[Option(HelpText="Enable mulitple-threads")]
 		public bool Threads { get; set; }
 
+		[Extra(HelpText="Archive File", Order = 0)]
+		public string Archive { get; set; }
+
+		[ExtraList(HelpText="Files to include", Order = 1, MaximumCount=5)]
+		public List<string> Files { get; set; }
+
 	}
 	
 }
