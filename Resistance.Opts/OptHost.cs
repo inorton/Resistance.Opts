@@ -28,11 +28,6 @@ namespace Resistance.Opts
 		protected object settingsObject;
 
 		/// <summary>
-		/// Set the optional heading for this option group.
-		/// </summary>
-		public string Heading { get; set; }
-
-		/// <summary>
 		/// The options built by this OptHost.
 		/// </summary>
 		public OptionSet Opts { 
@@ -56,7 +51,6 @@ namespace Resistance.Opts
 
 		public OptHost()
 		{
-			Heading = "Options";
 		}
 
 		public static string HypenateCamelCase (string ccase)
@@ -91,69 +85,90 @@ namespace Resistance.Opts
 
 			var oset = new OptionSet ();
 
-			// find the group heading if any,
-			var gp = ptype.GetCustomAttributes (typeof(CommandLineGroupHeadingAttribute), true);
+			// find the help text if it has any,
+			var gp = ptype.GetCustomAttributes (typeof(HelpAttribute), true);
+
+			var before_options = new List<string> ();
+			var after_options = new List<string> ();
+
+			bool seen_help_opts = false;
+
 			if (gp != null) {
-				if ( gp.Length > 1 ) throw new InvalidOperationException("more than one options heading given");
-			}
-
-			if (!string.IsNullOrEmpty (Heading)) {
-				oset.Add(Heading);
-			}
-
-
-
-			// build help provider
-			var hp = ptype.GetCustomAttributes (typeof(CommandLineHelpProviderAttribute), true);
-			if ( hp != null && (hp.Length != 0)) {
-				oset.Add( "h|help", "Display this message", (x) => {
-					throw new HelpRequestedArgument();
-				});
-			}
-
-			var opts = new Dictionary<PropertyInfo, CommandLineArgumentAttribute> ();
-
-			var plist = ptype.GetProperties();
-
-			// properties
-			foreach (var pi in plist) {
-				var attrs = pi.GetCustomAttributes( typeof(CommandLineArgumentAttribute),true );
-				foreach ( var a in attrs ) {
-					var aa = a as CommandLineArgumentAttribute;
-					if ( aa != null ){
-						opts[pi] = aa;
+				// we only want one!
+				var help = gp.FirstOrDefault () as HelpAttribute;
+				if (help != null) {
+					foreach (var h in help.Items) {
+						if (h.Contains (HelpAttribute.Options)) {
+							seen_help_opts = true;
+						} else {
+							if (!seen_help_opts) {
+								before_options.Add (h);
+							} else {	
+								after_options.Add (h);
+							}
+						}
 					}
 				}
 			}
 
-			foreach ( var kvp in opts.OrderBy( x => { return x.Value.Order; } ) )
-			{
+			foreach (var bf in before_options)
+				oset.Add (bf + Environment.NewLine + Environment.NewLine);
+
+			// build help provider
+			var hp = ptype.GetCustomAttributes (typeof(CommandLineHelpProviderAttribute), true);
+			if (hp != null && (hp.Length != 0)) {
+				oset.Add ("h|help", "Display this message", (x) => {
+					throw new HelpRequestedArgument ();
+				});
+			}
+
+			var opts = new Dictionary<PropertyInfo, OptionAttribute> ();
+
+			var plist = ptype.GetProperties ();
+
+			// properties
+			foreach (var pi in plist) {
+				var attrs = pi.GetCustomAttributes (typeof(OptionAttribute), true);
+				foreach (var a in attrs) {
+					var aa = a as OptionAttribute;
+					if (aa != null) {
+						opts [pi] = aa;
+					}
+				}
+			}
+
+			foreach (var kvp in opts.OrderBy( x => { return x.Value.Order; } )) {
 				var attr = kvp.Value;
 				var prop = kvp.Key;
 				var vtype = prop.PropertyType;
-				var prototype = HypenateCamelCase(prop.Name);
-				if ( !string.IsNullOrEmpty( attr.Name ) )
+				var prototype = HypenateCamelCase (prop.Name);
+				if (!string.IsNullOrEmpty (attr.Name))
 					prototype = attr.Name;
 
-				if ( vtype.IsAssignableFrom(typeof(bool)) ){
-					if ( !prototype.StartsWith("enable") && string.IsNullOrEmpty(attr.Name) )
+				if (vtype.IsAssignableFrom (typeof(bool))) {
+					if (!prototype.StartsWith ("enable") && string.IsNullOrEmpty (attr.Name))
 						prototype = "enable-" + prototype;
 
-					oset.Add( prototype, attr.HelpText, new BoolOptionSetter( prog, prop ).BoolAction );
+					oset.Add (prototype, attr.HelpText, new BoolOptionSetter (prog, prop).BoolAction);
 					continue;
 				} 
 
 				prototype += "=";
 
-				if ( vtype.IsAssignableFrom(typeof(int)) ){
-					oset.Add( prototype, attr.HelpText, new OptionSetter<int>( prog, prop ).Action );
+				if (vtype.IsAssignableFrom (typeof(int))) {
+					oset.Add (prototype, attr.HelpText, new OptionSetter<int> (prog, prop).Action);
 					continue;
 				}
 
-				if ( vtype.IsAssignableFrom(typeof(string)) ){
-					oset.Add( prototype, attr.HelpText, new OptionSetter<string>( prog, prop ).Action );
+				if (vtype.IsAssignableFrom (typeof(string))) {
+					oset.Add (prototype, attr.HelpText, new OptionSetter<string> (prog, prop).Action);
 					continue;
 				}
+			}
+
+			foreach (var af in after_options) {
+				if (!string.IsNullOrEmpty(af))
+					oset.Add (Environment.NewLine + af  + Environment.NewLine);
 			}
 
 			return oset;

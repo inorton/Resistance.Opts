@@ -5,11 +5,11 @@ using System.Collections.Generic;
 namespace Resistance.Opts
 {
 	[AttributeUsage( AttributeTargets.Class )]
-	public class HelpMessage : Attribute
+	public class HelpAttribute : Attribute
 	{
 		public List<string> Items { get; private set; }
 
-		public HelpMessage ( params string[] items)
+		public HelpAttribute ( params string[] items)
 		{
 			Items = new List<string>( items );
 		}

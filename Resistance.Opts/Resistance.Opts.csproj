@@ -36,7 +36,6 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="CommandLineArgumentAttribute.cs" />
     <Compile Include="OptHost.cs" />
     <Compile Include="CommandLineHelpProviderAttribute.cs" />
     <Compile Include="HelpRequestedArgument.cs" />
@@ -44,7 +43,8 @@
     <Compile Include="OptionSetter.cs" />
     <Compile Include="BoolOptionSetter.cs" />
     <Compile Include="Utils.cs" />
-    <Compile Include="CommandLineGroupHeadingAttribute.cs" />
+    <Compile Include="OptionAttribute.cs" />
+    <Compile Include="HelpAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

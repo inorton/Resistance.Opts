@@ -11,9 +11,11 @@ namespace Resistance.Opts
 		public string HelpText { get; set; }
 	}
 
-	public class PositionalArgument : Attribute
+	[AttributeUsage( AttributeTargets.Property )]
+	public class ExtraAttribute : Attribute 
 	{
 
 	}
+
 }
 

@@ -5,24 +5,6 @@ using System.Collections.Generic;
 
 namespace Resistance.Opts.Tests
 {
-	[CommandLineHelpProvider]
-	public class TestObject {
-
-		[CommandLineArgument(HelpText="Enable the test")]
-		public bool Enable { get; set; }
-
-		[CommandLineArgument(Name="verbose", HelpText="Be Verbose")]
-		public bool Verbose { get; set; }
-
-		[CommandLineArgument(HelpText="Output to {FILE}")]
-		public string OutputFile { get; set; }
-
-		[CommandLineArgument(HelpText="Run {NUM} jobs")]
-		public int JobCount { get; set; }
-
-		[CommandLineArgument(HelpText="Enable mulitple-threads")]
-		public bool Threads { get; set; }
-	}
 
 	[TestFixture]
 	public class TestDescrptions
@@ -30,7 +12,7 @@ namespace Resistance.Opts.Tests
 		[Test]
 		public void TestBuild ()
 		{
-			var host = new OptHost<TestObject>();
+			var host = new OptHost<ExampleObject>();
 			host.Opts.WriteOptionDescriptions( Console.Out );
 
 			host.Opts.Parse( new string[] { 
@@ -48,10 +30,12 @@ namespace Resistance.Opts.Tests
 
 		[Test]
 		public void TestTryHelp () {
-			var host = new OptHost<TestObject>();
+			var host = new OptHost<ExampleObject>();
 			var extra = new List<string>();
 			Assert.IsFalse( host.TryParse( extra, "--help") );
 		}
+
+
 
 	}
 }
