@@ -22,8 +22,9 @@ namespace Resistance.Opts
             {
                 return delegate(string v)
                 {
-                    base.Invoke(!string.IsNullOrEmpty(v));
-                };
+                    this.OptionPropertyInfo.SetValue( this.OptionOwner, 
+                                                     !string.IsNullOrEmpty(v), null );
+                };            
             }
         }
     }

@@ -5,8 +5,8 @@ namespace Resistance.Opts
 {
     public class OptionSetter<T>
     {
-        object optionOwner;
-        PropertyInfo optionPropertyInfo;
+        protected object OptionOwner;
+        protected PropertyInfo OptionPropertyInfo;
 
         public OptionSetter(object obj, PropertyInfo prop)
         {
@@ -14,13 +14,13 @@ namespace Resistance.Opts
                 throw new ArgumentNullException("obj");
             if (prop == null)
                 throw new ArgumentNullException("prop");
-            optionOwner = obj;
-            optionPropertyInfo = prop;
+            OptionOwner = obj;
+            OptionPropertyInfo = prop;
         }
 
         public virtual void Invoke(object value)
         {
-            optionPropertyInfo.SetValue(optionOwner, value, null);
+            OptionPropertyInfo.SetValue(OptionOwner, value, null);
         }
 
         public Action<T> Action
