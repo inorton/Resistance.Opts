@@ -11,13 +11,21 @@ using System.Text;
 namespace Resistance.Opts
 {
 
-	public class BoolOptionSetter : OptionSetter<bool> {
-		public BoolOptionSetter( object obj, PropertyInfo prop) : base ( obj, prop ) { }
-		public Action<string> BoolAction {
-			get {
-				return delegate(string v) { base.Invoke(!string.IsNullOrEmpty(v)); };
-			}
-		}
-	}
+    public class BoolOptionSetter : OptionSetter<bool>
+    {
+        public BoolOptionSetter(object obj, PropertyInfo prop) : base ( obj, prop )
+        {
+        }
+        public Action<string> BoolAction
+        {
+            get
+            {
+                return delegate(string v)
+                {
+                    base.Invoke(!string.IsNullOrEmpty(v));
+                };
+            }
+        }
+    }
 	
 }
