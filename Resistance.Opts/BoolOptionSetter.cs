@@ -8,25 +8,18 @@ using System.Text.RegularExpressions;
 using System.IO;
 using System.Text;
 
-namespace Resistance.Opts
-{
+namespace Resistance.Opts {
 
-    public class BoolOptionSetter : OptionSetter<bool>
-    {
-        public BoolOptionSetter(object obj, PropertyInfo prop) : base ( obj, prop )
-        {
-        }
-        public Action<string> BoolAction
-        {
-            get
-            {
-                return delegate(string v)
-                {
-                    this.OptionPropertyInfo.SetValue( this.OptionOwner, 
-                                                     !string.IsNullOrEmpty(v), null );
-                };            
-            }
-        }
-    }
-	
+	public class BoolOptionSetter : OptionSetter<bool> {
+		public BoolOptionSetter (object obj, PropertyInfo prop) : base ( obj, prop ) {
+		}
+
+		public Action<string> BoolAction {
+			get {
+				return delegate(string v) {
+					this.OptionPropertyInfo.SetValue (this.OptionOwner, !string.IsNullOrEmpty (v), null);
+				};            
+			}
+		}
+	}
 }
