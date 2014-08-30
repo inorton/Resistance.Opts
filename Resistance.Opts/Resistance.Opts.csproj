@@ -38,13 +38,12 @@
     <Compile Include="Options.cs" />
     <Compile Include="OptHost.cs" />
     <Compile Include="CommandLineHelpProviderAttribute.cs" />
-    <Compile Include="HelpRequestedArgument.cs" />
     <Compile Include="BadCommandLineArguments.cs" />
     <Compile Include="OptionSetter.cs" />
     <Compile Include="BoolOptionSetter.cs" />
-    <Compile Include="Utils.cs" />
     <Compile Include="OptionAttribute.cs" />
     <Compile Include="HelpAttribute.cs" />
+    <Compile Include="HelpRequestedArgumentException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
