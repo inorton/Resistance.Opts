@@ -4,6 +4,10 @@ using Mono.Options;
 
 namespace Resistance.Opts {
 
+	/// <summary>
+	/// An exception thrown when the command line arguments are bad formatted or do not
+	/// resolve all the constraints.
+	/// </summary>
 	public class BadCommandLineArgumentsException : Exception {
 
 		/// <summary>

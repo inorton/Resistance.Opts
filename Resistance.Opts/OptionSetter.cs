@@ -5,8 +5,9 @@ using System.Diagnostics.Contracts;
 namespace Resistance.Opts {
 
 	/// <summary>
-	/// A class that sets a property of an object based on a <see cref="ObjectAttribute"/> attribute.
+	/// A class that sets a property of an object based on a <see cref="OptionAttribute"/> attribute.
 	/// </summary>
+	/// <typeparam name="T">The type of input on which the propert will be set.</typeparam>
 	public class OptionSetter<T> {
 
 		#region Field

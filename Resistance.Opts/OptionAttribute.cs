@@ -15,6 +15,12 @@ namespace Resistance.Opts {
 		/// <value>The name of the command line option.</value>
 		public string Name { get; set; }
 
+		/// <summary>
+		/// The order in which parsing of the objects will be performed (can be important if
+		/// setting one property of the settings object depends on the value of a property
+		/// being set first.
+		/// </summary>
+		/// <value>An integer representing the order in which the command line arguments will be parsed.</value>
 		public int Order { get; set; }
 
 		/// <summary>
@@ -30,11 +36,6 @@ namespace Resistance.Opts {
 	[AttributeUsage( AttributeTargets.Property )]
 	public class OptionAttribute : BaseOptionAttribute {
 	
-	}
-
-	[AttributeUsage( AttributeTargets.Property )]
-	public class ExtraAttribute : BaseOptionAttribute {
-
 	}
 
 	/// <summary>
