@@ -9,7 +9,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Resistance.Opts</RootNamespace>
     <AssemblyName>Resistance.Opts</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -20,6 +19,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -32,19 +32,19 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="OptHost.cs" />
     <Compile Include="CommandLineHelpProviderAttribute.cs" />
-    <Compile Include="HelpRequestedArgument.cs" />
     <Compile Include="BadCommandLineArguments.cs" />
     <Compile Include="OptionSetter.cs" />
     <Compile Include="BoolOptionSetter.cs" />
-    <Compile Include="Utils.cs" />
     <Compile Include="OptionAttribute.cs" />
     <Compile Include="HelpAttribute.cs" />
+    <Compile Include="HelpRequestedArgumentException.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
